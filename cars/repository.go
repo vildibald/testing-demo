@@ -5,6 +5,8 @@ import (
 	"github.com/google/uuid"
 )
 
+//go:generate mockgen -source=repository.go -destination=repository_mock.go -package=cars
+
 type Repository interface {
 	Create(entity *Car) (*Car, error)
 	Get(id string) (*Car, error)

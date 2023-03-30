@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"testing-demo/cars"
 
@@ -47,7 +48,12 @@ func main() {
 
 			result, err := carService.Create(&car)
 			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
+				if errors.Is(err, cars.ErrIdNotEmpty) {
+					http.Error(w, err.Error(), http.StatusBadRequest)
+					return
+				} else {
+					http.Error(w, err.Error(), http.StatusInternalServerError)
+				}
 			}
 
 			w.Header().Set("Content-Type", "application/json")
